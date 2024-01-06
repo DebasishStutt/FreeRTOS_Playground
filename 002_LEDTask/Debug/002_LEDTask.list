@@ -37,15 +37,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_rnglists 00000f86  00000000  00000000  00039bf0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00024aef  00000000  00000000  0003ab76  2**0
+ 17 .debug_macro  00024aed  00000000  00000000  0003ab76  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   000188ee  00000000  00000000  0005f665  2**0
+ 18 .debug_line   00018dc6  00000000  00000000  0005f663  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000de2b4  00000000  00000000  00077f53  2**0
+ 19 .debug_str    000de3b8  00000000  00000000  00078429  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00005408  00000000  00000000  00156208  2**2
+ 20 .debug_frame  00005408  00000000  00000000  001567e4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000010c  00000000  00000000  0015b610  2**0
+ 21 .debug_line_str 00000134  00000000  00000000  0015bbec  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -7046,7 +7046,7 @@ static BaseType_t prvIsQueueEmpty( const Queue_t * pxQueue )
             {
                 /* Allocate space for the TCB. */
                 pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) ); /*lint !e9087 !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack, and the first member of TCB_t is always a pointer to the task's stack. */
- 8002a6a:	2058      	movs	r0, #88	; 0x58
+ 8002a6a:	2060      	movs	r0, #96	; 0x60
  8002a6c:	f001 fd86 	bl	800457c <pvPortMalloc>
  8002a70:	61f8      	str	r0, [r7, #28]
 
@@ -7056,7 +7056,7 @@ static BaseType_t prvIsQueueEmpty( const Queue_t * pxQueue )
  8002a76:	d008      	beq.n	8002a8a <xTaskCreate+0x42>
                 {
                     memset( ( void * ) pxNewTCB, 0x00, sizeof( TCB_t ) );
- 8002a78:	2258      	movs	r2, #88	; 0x58
+ 8002a78:	2260      	movs	r2, #96	; 0x60
  8002a7a:	2100      	movs	r1, #0
  8002a7c:	69f8      	ldr	r0, [r7, #28]
  8002a7e:	f003 ff8b 	bl	8006998 <memset>

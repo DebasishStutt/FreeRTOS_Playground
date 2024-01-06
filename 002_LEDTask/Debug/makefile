@@ -68,8 +68,8 @@ all: main-build
 main-build: 002_LEDTask.elf secondary-outputs
 
 # Tool invocations
-002_LEDTask.elf 002_LEDTask.map: $(OBJS) $(USER_OBJS) D:\All_Learnings\Embedded-ALL\FreeRTOS_Restart_21_12_23\ide_wrkspc\RTOS_work\002_LEDTask\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "002_LEDTask.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\All_Learnings\Embedded-ALL\FreeRTOS_Restart_21_12_23\ide_wrkspc\RTOS_work\002_LEDTask\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="002_LEDTask.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+002_LEDTask.elf 002_LEDTask.map: $(OBJS) $(USER_OBJS) D:\All_Learnings\Embedded-ALL\FreeRTOS_Restart_21_12_23\ide_wrkspc\RTOS_work\FreeRTOS_Playground\002_LEDTask\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "002_LEDTask.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\All_Learnings\Embedded-ALL\FreeRTOS_Restart_21_12_23\ide_wrkspc\RTOS_work\FreeRTOS_Playground\002_LEDTask\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="002_LEDTask.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
