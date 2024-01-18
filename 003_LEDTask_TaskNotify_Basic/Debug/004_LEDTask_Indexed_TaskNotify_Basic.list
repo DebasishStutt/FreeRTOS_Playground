@@ -1,5 +1,5 @@
 
-004_IndexedTaskNotify_Basic.elf:     file format elf32-littlearm
+004_LEDTask_Indexed_TaskNotify_Basic.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
@@ -41,11 +41,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   00018de1  00000000  00000000  0005f80b  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000de3de  00000000  00000000  000785ec  2**0
+ 19 .debug_str    000de3df  00000000  00000000  000785ec  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  20 .debug_frame  0000592c  00000000  00000000  001569cc  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000144  00000000  00000000  0015c2f8  2**0
+ 21 .debug_line_str 00000145  00000000  00000000  0015c2f8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:

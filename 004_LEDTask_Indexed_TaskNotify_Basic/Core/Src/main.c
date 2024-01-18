@@ -24,7 +24,9 @@
 // #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include <string.h>
 #include <stdio.h>
+#include <stdint.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +50,7 @@
 #define DWT_CTRL_CNT *((volatile uint32_t*)0xE0001000)
 TaskHandle_t greenLedTaskHandle;
 TaskHandle_t tickCountingTaskHandle;
+TaskHandle_t sendDataToPCHandle;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,7 +75,7 @@ static void greenLedTask_handler(void *parameters) {
 	TickType_t frequency = 200;
 
 	 while(1) {
-		 notifyResult = xTaskNotifyWait(0, 0, 0, 2000);
+		 notifyResult = xTaskNotifyWaitIndexed(0, 0, 0, NULL, 2000); //(0, 0, 0, 2000);
 
 		 if (notifyResult == pdTRUE) {
 		 	snprintf(msg,100,"%s\n", "Notification at greenLED task received\n");
@@ -112,25 +115,66 @@ static void greenLedTask_handler(void *parameters) {
 
 		// printf("%s\n", (char *)parameters);
 		// taskYIELD();
-		xTaskNotify(tickCountingTaskHandle, 0, 0);
+		xTaskNotifyIndexed(tickCountingTaskHandle, 0, 0, eNoAction); //(tickCountingTaskHandle, 0, 0);
 	 }
 }
 
-static void tickCountingTask_handler(void *parameters) {
+static void sendDataToPC_handler(void *parameters) {
 	char msg[100];
+	char time[50];
+	uint32_t notificationVal;
 	while(1) {
 		// printf("%s\n", (char *)parameters);
 		// snprintf(msg,100,"%s\n", (char*)parameters);
 		// SEGGER_SYSVIEW_PrintfTarget(msg);
 		// taskYIELD();
-		xTaskNotify(greenLedTaskHandle, 0, 0);
+		if ((xTaskNotifyWaitIndexed(1, 0, 0, &notificationVal, 2000)) == pdTRUE) {
+			snprintf(msg, 100, "%s", (char*)parameters);
 
-		BaseType_t notifyResult = xTaskNotifyWait(0, 0, 0, 2000);
+			snprintf(time, 50, "%lu\n", notificationVal);
+
+			strcat(msg, time);
+
+			SEGGER_SYSVIEW_PrintfTarget(msg);
+
+			// xTaskNotifyIndexed(tickCountingTaskHandle, 1, 0, eNoAction);
+			xTaskGenericNotify( tickCountingTaskHandle, 1, 0, eNoAction, NULL );
+		} else {
+			// while (1);
+		}
+
+
+	}
+}
+
+static void tickCountingTask_handler(void *parameters) {
+	char msg[100];
+	uint32_t secElapsed = 0u;
+	uint32_t currSysTimeMS = xTaskGetTickCount() * (1/configTICK_RATE_HZ) * 1000;
+	uint32_t prevSysTimeMS = currSysTimeMS;
+	while(1) {
+		// printf("%s\n", (char *)parameters);
+		// snprintf(msg,100,"%s\n", (char*)parameters);
+		// SEGGER_SYSVIEW_PrintfTarget(msg);
+		// taskYIELD();
+		if ((currSysTimeMS - prevSysTimeMS) >= 1000) {
+			prevSysTimeMS = currSysTimeMS;
+			secElapsed++;
+			xTaskNotifyIndexed(sendDataToPCHandle, 1, secElapsed, eSetValueWithOverwrite);
+			if ((xTaskNotifyWaitIndexed(1, 0, 0, NULL, 2000)) == pdFALSE) {
+				while (1);
+			}
+		}
+		xTaskNotifyIndexed(greenLedTaskHandle, 0, 0, eNoAction); //(greenLedTaskHandle, 0, 0);
+
+		BaseType_t notifyResult = xTaskNotifyWaitIndexed(0, 0, 0, NULL, 2000); //(0, 0, 0, 2000);
 
 		if (notifyResult == pdTRUE) {
 			snprintf(msg,100,"%s\n", "Notification at tickcount received\n");
 			SEGGER_SYSVIEW_PrintfTarget(msg);
 		}
+
+		currSysTimeMS = xTaskGetTickCount();//  * (1/configTICK_RATE_HZ) * 1000;
 	}
 }
 /* USER CODE END 0 */
@@ -180,8 +224,12 @@ int main(void)
   // create tasks
   status = xTaskCreate(greenLedTask_handler, "greenLedTask", 200, "Hello from greenLedTask", 2, &greenLedTaskHandle);
   configASSERT(status == pdPASS);
+
   status = xTaskCreate(tickCountingTask_handler, "tickCountingTask", 200, "Hello from tickCountingTask", 2, &tickCountingTaskHandle);
   configASSERT(status == pdPASS);
+
+  status = xTaskCreate(sendDataToPC_handler, "sendDataToPCTask", 200, "Hello from sendDataToPCTask: ", 2, &sendDataToPCHandle);
+    configASSERT(status == pdPASS);
 
   // start scheduler to run tasks
   vTaskStartScheduler();

@@ -1,0 +1,8 @@
+../Core/Src/main.c:68:13:greenLedTask_handler	4
+../Core/Src/main.c:122:13:sendDataToPC_handler	2
+../Core/Src/main.c:150:13:tickCountingTask_handler	4
+../Core/Src/main.c:186:5:main	4
+../Core/Src/main.c:254:6:SystemClock_Config	4
+../Core/Src/main.c:309:13:MX_GPIO_Init	1
+../Core/Src/main.c:361:6:HAL_TIM_PeriodElapsedCallback	2
+../Core/Src/main.c:378:6:Error_Handler	1
